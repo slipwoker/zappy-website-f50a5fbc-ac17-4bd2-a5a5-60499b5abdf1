@@ -250,7 +250,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <!-- Cookie Consent -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
     <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
     <!-- Mickidum Accessibility Toolbar -->
     <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
@@ -349,17 +349,19 @@
     window.ZAPPY_WEBSITE_ID = "f50a5fbc-ac17-4bd2-a5a5-60499b5abdf1";
     // Preview pages are served by the Zappy server itself (localhost in dev), so use that base.
     // Deployed sites are static and must call the public Zappy API (never localhost).
-    window.ZAPPY_API_BASE = "https://api.zappy5.com";
+    window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview'))
+      ? "https://api.zappy5.com"
+      : "https://api.zappy5.com";
   </script>
   
     <div class="mobile-search-panel" id="mobile-search-panel">
       <div class="search-wrapper">
         <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
         <button class="search-submit" id="mobile-search-submit" title="חיפוש">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
         </button>
         <button class="close-search" id="close-mobile-search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
         </button>
       </div>
       <div class="search-results" id="mobile-search-results"></div>
@@ -385,7 +387,7 @@
           <h1 id="products-page-title">המוצרים שלנו</h1>
           <div class="products-toolbar" id="products-toolbar" style="display:none;">
             <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" style="display:none;" aria-label="סינון">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h4"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h4"></path></svg>
               <span>סינון</span>
             </button>
             <div class="toolbar-left">
@@ -398,10 +400,10 @@
               </div>
               <div class="view-toggle" id="view-toggle" style="display:none;">
                 <button class="view-btn active" data-view="grid" aria-label="תצוגת רשת">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
                 </button>
                 <button class="view-btn" data-view="list" aria-label="תצוגת רשימה">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>
                 </button>
               </div>
             </div>
@@ -420,14 +422,37 @@
   
 
 
-<section id="layout-1779218925575" class="layout-section" data-zappy-component="true" style="width: 100%; padding: 60px 0; direction: rtl;" data-component-id="basic-three-columns">
+<section id="layout-1779218925575" class="layout-section" data-zappy-component="true" style="width: 100%; padding: 60px 0px; direction: rtl; position: relative; overflow: hidden; background-color: #C9423A; --zappy-bg-color: #C9423A" data-component-id="basic-three-columns" data-zappy-bg-type="color" data-zappy-bg-color="#C9423A" data-zappy-bg-image="" data-zappy-bg-overlay-color="#000000" data-zappy-bg-overlay-opacity="30" data-zappy-bg-video-type="" data-zappy-bg-video-url=""><style data-zappy-section-color="layout-1779218925575">#layout-1779218925575, #layout-1779218925575 h1, #layout-1779218925575 h2, #layout-1779218925575 h3, #layout-1779218925575 h4, #layout-1779218925575 h5, #layout-1779218925575 h6, #layout-1779218925575 p, #layout-1779218925575 span, #layout-1779218925575 a, #layout-1779218925575 li, #layout-1779218925575 label, #layout-1779218925575 blockquote, #layout-1779218925575 figcaption, #layout-1779218925575 dt, #layout-1779218925575 dd, #layout-1779218925575 td, #layout-1779218925575 th { color: #FFFFFF; }</style>
   <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
   <h2 style="font-size: 32px; font-weight: 700; color: #1F2937; margin-bottom: 40px; text-align: center; font-family: :before, .quote::before, [data-quote]::before {
   content: \201C;">כותרת שלך כאן</h2>
   <div class="three-column-grid" style="--zappy-grid-cols: repeat(auto-fit, minmax(250px, 1fr)); display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;" data-zappy-explicit-columns="true">
     <div>
+      <h3 style="font-size: 20px; font-weight: 600; color: rgb(31, 41, 55); margin-bottom: 12px;">פיצה 59 ₪</h3>
+      <p style="font-size: 16px; line-height: 1.6; color: #1F2937; opacity: 0.8; font-family: :before, .quote::before, [data-quote]::before {
+  content: \201C;">טקסט תיאור קצר</p>
+    </div>
+    <div>
       <h3 style="font-size: 20px; font-weight: 600; color: #1F2937; margin-bottom: 12px; font-family: :before, .quote::before, [data-quote]::before {
-  content: \201C;">כותרת כרטיס 1</h3>
+  content: \201C;">כותרת כרטיס 2</h3>
+      <p style="font-size: 16px; line-height: 1.6; color: #1F2937; opacity: 0.8; font-family: :before, .quote::before, [data-quote]::before {
+  content: \201C;">טקסט תיאור קצר</p>
+    </div>
+    <div>
+      <h3 style="font-size: 20px; font-weight: 600; color: #1F2937; margin-bottom: 12px; font-family: :before, .quote::before, [data-quote]::before {
+  content: \201C;">כותרת כרטיס 3</h3>
+      <p style="font-size: 16px; line-height: 1.6; color: #1F2937; opacity: 0.8; font-family: :before, .quote::before, [data-quote]::before {
+  content: \201C;">טקסט תיאור קצר</p>
+    </div>
+  </div>
+  </div>
+</section><section id="layout-1779218925575-dup-1779218982530" class="layout-section" data-zappy-component="true" style="width: 100%; padding: 60px 0px; direction: rtl; position: relative; overflow: hidden; background-color: #C9423A; --zappy-bg-color: #C9423A" data-component-id="basic-three-columns" data-zappy-bg-type="color" data-zappy-bg-color="#C9423A" data-zappy-bg-image="" data-zappy-bg-overlay-color="#000000" data-zappy-bg-overlay-opacity="30" data-zappy-bg-video-type="" data-zappy-bg-video-url=""><style data-zappy-section-color="layout-1779218925575">#layout-1779218925575, #layout-1779218925575 h1, #layout-1779218925575 h2, #layout-1779218925575 h3, #layout-1779218925575 h4, #layout-1779218925575 h5, #layout-1779218925575 h6, #layout-1779218925575 p, #layout-1779218925575 span, #layout-1779218925575 a, #layout-1779218925575 li, #layout-1779218925575 label, #layout-1779218925575 blockquote, #layout-1779218925575 figcaption, #layout-1779218925575 dt, #layout-1779218925575 dd, #layout-1779218925575 td, #layout-1779218925575 th { color: #FFFFFF; }</style>
+  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+  <h2 style="font-size: 32px; font-weight: 700; color: #1F2937; margin-bottom: 40px; text-align: center; font-family: :before, .quote::before, [data-quote]::before {
+  content: \201C;">כותרת שלך כאן</h2>
+  <div class="three-column-grid" style="--zappy-grid-cols: repeat(auto-fit, minmax(250px, 1fr)); display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;" data-zappy-explicit-columns="true">
+    <div>
+      <h3 style="font-size: 20px; font-weight: 600; color: rgb(31, 41, 55); margin-bottom: 12px;">פיצה 59 ₪</h3>
       <p style="font-size: 16px; line-height: 1.6; color: #1F2937; opacity: 0.8; font-family: :before, .quote::before, [data-quote]::before {
   content: \201C;">טקסט תיאור קצר</p>
     </div>
@@ -447,7 +472,7 @@
   </div>
 </section>
 
-<footer class="site-footer" dir="rtl" aria-label="כותרת תחתונה של האתר"> <div class="footer-container"> <div class="footer-top"> <div class="footer-col footer-brand"> <img src="/assets/restaurant-logo.webp" alt="פיצהצה" class="logo" /> <p class="footer-tagline">פיצה אמיתית, טעם אמיתי.<br>מהלב אל הצלחת — כל יום מחדש.</p> <div class="footer-social">    </div> </div> <div class="footer-col footer-links"> <h3 class="footer-heading"><span class="heading-accent"></span>ניווט מהיר</h3> <ul class="footer-nav"> <li><a href="/">בית</a></li> <li><a href="/about">אודות</a></li> <li><a href="/gallery">גלריה</a></li> <li><a href="/contact">צור קשר</a></li> </ul> </div> <div class="footer-col footer-hours"> <h3 class="footer-heading"><span class="heading-accent"></span>שעות פעילות</h3> <ul class="hours-list"> <li><a href="/"><span class="day">ראשון – חמישי</span><span class="time">12:00 – 23:00</span></a></li> <li><a href="/"><span class="day">שישי</span><span class="time">11:00 – 15:00</span></a></li> <li><a href="/"><span class="day">שבת</span><span class="time">20:00 – 23:30</span></a></li> </ul> </div> <div class="footer-col footer-contact-col"> <h3 class="footer-heading"><span class="heading-accent"></span>יצירת קשר</h3> <ul class="footer-contact"> <li> <span class="contact-icon"><i class="fas fa-envelope"></i></span> <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span> </li> <li> <span class="contact-icon"><i class="fas fa-phone"></i></span> <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span> </li> <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span> <span class="contact-text">[business_address]</span></a></li> </ul> </div> </div> <div class="footer-divider"></div> <div class="footer-bottom"> <p class="footer-copyright">© 2026 פיצהצה. כל הזכויות שמורות.</p> <div class="footer-legal"> <a href="/privacy">מדיניות פרטיות</a> <span class="legal-sep">·</span> <a href="/terms">תנאי שימוש</a><span class="separator">|</span>
+<footer class="site-footer" dir="rtl" aria-label="כותרת תחתונה של האתר"> <div class="footer-container"> <div class="footer-top"> <div class="footer-col footer-brand"> <img src="/assets/restaurant-logo.webp" alt="פיצהצה" class="logo"> <p class="footer-tagline">פיצה אמיתית, טעם אמיתי.<br>מהלב אל הצלחת — כל יום מחדש.</p> <div class="footer-social">    </div> </div> <div class="footer-col footer-links"> <h3 class="footer-heading"><span class="heading-accent"></span>ניווט מהיר</h3> <ul class="footer-nav"> <li><a href="/">בית</a></li> <li><a href="/about">אודות</a></li> <li><a href="/gallery">גלריה</a></li> <li><a href="/contact">צור קשר</a></li> </ul> </div> <div class="footer-col footer-hours"> <h3 class="footer-heading"><span class="heading-accent"></span>שעות פעילות</h3> <ul class="hours-list"> <li><a href="/"><span class="day">ראשון – חמישי</span><span class="time">12:00 – 23:00</span></a></li> <li><a href="/"><span class="day">שישי</span><span class="time">11:00 – 15:00</span></a></li> <li><a href="/"><span class="day">שבת</span><span class="time">20:00 – 23:30</span></a></li> </ul> </div> <div class="footer-col footer-contact-col"> <h3 class="footer-heading"><span class="heading-accent"></span>יצירת קשר</h3> <ul class="footer-contact"> <li> <span class="contact-icon"><i class="fas fa-envelope"></i></span> <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span> </li> <li> <span class="contact-icon"><i class="fas fa-phone"></i></span> <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span> </li> <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span> <span class="contact-text">[business_address]</span></a></li> </ul> </div> </div> <div class="footer-divider"></div> <div class="footer-bottom"> <p class="footer-copyright">© 2026 פיצהצה. כל הזכויות שמורות.</p> <div class="footer-legal"> <a href="/privacy">מדיניות פרטיות</a> <span class="legal-sep">·</span> <a href="/terms">תנאי שימוש</a><span class="separator">|</span>
             <a href="/return-policy" aria-label="מדיניות החזרות">
               מדיניות החזרות
             </a> <span class="legal-sep">·</span> <a href="/accessibility">נגישות</a> <span class="legal-sep">·</span> <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a> </div> </div> </div> </footer>
@@ -457,7 +482,7 @@
   <div class="cart-drawer-header">
     <h2>עגלת הקניות שלך</h2>
     <button type="button" class="cart-drawer-close" id="cart-drawer-close" aria-label="סגור">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
     </button>
   </div>
   <div class="cart-drawer-body" id="cart-drawer-items">
@@ -551,7 +576,7 @@
   })();
   </script>
     <div data-integration="accessibility:toolbar"></div>
-  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+
 
     <script src="/script.js"></script>
 
