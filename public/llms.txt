@@ -1,0 +1,104 @@
+# פיצהצה — Generative Engine Optimization Map
+
+> A dairy restaurant and pizzeria serving a variety of dairy-based dishes and pizzas. The establishment focuses on dairy cuisine, offering a warm and inviting dining experience centered around pizza and other dairy food options.
+
+---
+
+## Pages
+
+### בית
+https://example.com
+A dairy restaurant and pizzeria serving a variety of dairy-based dishes and pizzas. The establishment focuses on dairy cuisine, offering a warm and inviting din
+
+### אודות
+https://example.com/about
+אודות | פיצהצה. indian restaurants near me
+
+### גלריה
+https://example.com/gallery
+גלריה | פיצהצה. indian restaurants near me
+
+### צור קשר
+https://example.com/contact
+צור קשר | פיצהצה. indian restaurants near me
+
+### Products
+https://example.com/products
+המוצרים שלנו - פיצהצה
+
+### Cart
+https://example.com/cart
+עגלת הקניות שלך
+
+### Checkout
+https://example.com/checkout
+תשלום
+
+### Login
+https://example.com/login
+התחברות לקוחות
+
+### Account
+https://example.com/account
+החשבון שלי
+
+### Order Success
+https://example.com/order-success
+תודה על ההזמנה
+
+### Product Detail
+https://example.com/product/:slug
+פרטי המוצר - פיצהצה
+
+### Category
+https://example.com/category/:slug
+מוצרים - פיצהצה
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## Products
+
+_No products are currently configured._
+
+---
+
+# Business Context (for LLM understanding)
+
+## About פיצהצה
+A dairy restaurant and pizzeria serving a variety of dairy-based dishes and pizzas. The establishment focuses on dairy cuisine, offering a warm and inviting dining experience centered around pizza and other dairy food options.
+
+## Services/Products
+- פיצה
+- אוכל חלבי
+
+## Target Audience
+- משפחות מקומיות
+- זוגות צעירים
+- סטודנטים ומקצוענים צעירים
+
+## Industry
+Restaurant
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt
+- Products (JSON): https://example.com/products.json
+- Products (Google Merchant RSS): https://example.com/product-feed.xml

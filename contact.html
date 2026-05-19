@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>צור קשר — פיצהצה</title>
+    <meta name="description" content="צור קשר | פיצהצה. indian restaurants near me">
+    <meta name="keywords" content="צור קשר, indian restaurants near me, kosher restaurants near me, restaurants near me, fast food restaurants">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'f50a5fbc-ac17-4bd2-a5a5-60499b5abdf1',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="צור קשר — פיצהצה">
+    <meta property="og:description" content="צור קשר | פיצהצה. indian restaurants near me">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="צור קשר — פיצהצה">
+    <meta name="twitter:description" content="צור קשר | פיצהצה. indian restaurants near me">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="חיפוש">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "f50a5fbc-ac17-4bd2-a5a5-60499b5abdf1";window.ZAPPY_API_BASE = "https://api.zappy5.com";</script><a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site---------image-1.webp" alt="פיצהצה"></a>
+    </div><ul class="nav-menu" id="navMenu">
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/products">
+        מוצרים
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/products">כל המוצרים</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/">בית</a></li><li><a href="/about">אודות</a></li><li><a href="/gallery">גלריה</a></li><li><a href="/contact">צור קשר</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div></div>
+
+    
+
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl" style="display:none">
+      <div class="catalog-menu-container">
+        <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section class="contact-contact-intro-section" data-layout-spec="צור קשר-contact-intro" dir="rtl">
+  <!-- Decorative mosaic tile motif -->
+  <svg class="contact-intro-mosaic-decor" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="20,10 60,10 60,50 20,50" fill="#C9423A" opacity="0.12"></polygon>
+    <polygon points="65,5 95,5 95,35 65,35" fill="#4F7A6A" opacity="0.10"></polygon>
+    <polygon points="10,60 45,60 45,95 10,95" fill="#F6C667" opacity="0.14"></polygon>
+    <polygon points="50,70 80,55 95,85 65,100" fill="#C9423A" opacity="0.09"></polygon>
+    <polygon points="90,40 120,40 120,70 90,70" fill="#4F7A6A" opacity="0.08"></polygon>
+    <polygon points="105,80 140,80 140,115 105,115" fill="#F6C667" opacity="0.11"></polygon>
+    <polygon points="15,110 50,110 50,145 15,145" fill="#C9423A" opacity="0.07"></polygon>
+    <polygon points="60,120 85,105 100,130 75,145" fill="#4F7A6A" opacity="0.09"></polygon>
+  </svg>
+
+  <div class="contact-intro-container">
+    <!-- Two-column layout: content (right/start) + image (left/end) -->
+    <div class="contact-intro-grid">
+
+      <!-- Content Column -->
+      <div class="contact-intro-content">
+        <div class="contact-intro-eyebrow">צרו קשר</div>
+        <h1 class="contact-intro-heading">שמחים לשמוע מכם</h1>
+        <p class="contact-intro-intro-text">בין אם אתם רוצים לשאול שאלה, לתאם אירוע מיוחד, או פשוט לגלות מה חדש בתפריט — אנחנו כאן בשבילכם. מסעדת פיצהצה מחכה לכם עם פיצה טרייה, מנות חלביות עשירות, ואווירה חמה שתרגישו בה כמו בבית.</p>
+
+        <!-- Contact Info Blocks -->
+        <div class="contact-info-stack">
+
+          <div class="contact-info-block">
+            <div class="contact-info-icon-wrap">
+              <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="contact-info-text">
+              <h3 class="contact-info-label">כתובת</h3>
+              
+            </div>
+          </div>
+
+          <div class="contact-info-block">
+            <div class="contact-info-icon-wrap">
+              <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.36 2 2 0 0 1 3.62 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
+            <div class="contact-info-text">
+              <h3 class="contact-info-label">טלפון</h3>
+              <p></p>
+            </div>
+          </div>
+
+          <div class="contact-info-block">
+            <div class="contact-info-icon-wrap">
+              <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <div class="contact-info-text">
+              <h3 class="contact-info-label">אימייל</h3>
+              <p></p>
+            </div>
+          </div>
+
+          <div class="contact-info-block">
+            <div class="contact-info-icon-wrap">
+              <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="contact-info-text">
+              <h3 class="contact-info-label">שעות פתיחה</h3>
+              <p>ראשון–חמישי: 12:00–23:00</p>
+              <p>שישי: 12:00–15:00 | מוצ״ש: 21:00–24:00</p>
+            </div>
+          </div>
+
+        </div>
+        <!-- End Contact Info Stack -->
+
+        
+      </div>
+      <!-- End Content Column -->
+
+      <!-- Image Column -->
+      <div class="contact-intro-image-col">
+        <div class="contact-intro-image-frame">
+          <img loading="eager" fetchpriority="high" data-placeholder="contact-contact-intro-image-1" data-context="Warm, inviting interior of a dairy pizzeria restaurant in Israel. Wooden tables with checkered napkins, rustic brick or tile walls with warm ambient lighting, a wood-fired pizza oven visible in the background, fresh mozzarella and basil on a pizza in the foreground. Cozy, family-friendly atmosphere with golden light." width="560" height="720" src="/assets/site-contact-contact-intro-image-1.webp" alt="פנים המסעדה של פיצהצה – אווירה חמה ומזמינה">
+          <!-- Decorative accent label -->
+          <div class="contact-intro-img-badge">מחכים לכם</div>
+        </div>
+      </div>
+      <!-- End Image Column -->
+
+    </div>
+  </div>
+
+  <!-- Bottom curved divider -->
+  <div class="contact-intro-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,50 Q300,0 600,30 Q900,60 1200,20 L1200,80 Z" fill="#2A1F0E"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-details-section" data-layout-spec="צור קשר-details" dir="rtl">
+  <div class="contact-details-container">
+    <div class="contact-details-header">
+      <span class="contact-details-label">מידע שימושי</span>
+      <h2 class="contact-details-title">כל מה שצריך לדעת לפני שמגיעים</h2>
+      <div class="contact-details-rule"></div>
+    </div>
+    <div class="contact-details-panels">
+
+      <!-- Panel 1: Location -->
+      <article class="contact-details-panel">
+        <div class="contact-panel-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true">
+            <circle cx="24" cy="20" r="8" stroke="currentColor" stroke-width="2.5" fill="none"></circle>
+            <path d="M24 4C15.163 4 8 11.163 8 20c0 12 16 28 16 28s16-16 16-28C40 11.163 32.837 4 24 4z" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="contact-panel-content">
+          <h3 class="contact-panel-title">איך מגיעים אלינו</h3>
+          <div class="contact-panel-separator"></div>
+          <p class="contact-panel-text">פיצהצה ממוקמת בלב השכונה, נגישה ברגל ובתחבורה ציבורית. חניה זמינה בסמוך למסעדה ברחוב הראשי. אנחנו ממוקמים קרוב למרכז העיר ומחכים לכם בכל יום.</p>
+          
+        </div>
+      </article>
+
+      <!-- Panel 2: Dining Experience -->
+      <article class="contact-details-panel">
+        <div class="contact-panel-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true">
+            <path d="M16 8v10a8 8 0 0016 0V8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <line x1="24" y1="26" x2="24" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+            <line x1="16" y1="40" x2="32" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+            <path d="M10 8v8c0 3 2 5 5 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+            <path d="M38 8v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+            <path d="M34 8v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+            <path d="M38 22c0 2.5-2 4-4 4s-4-1.5-4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="contact-panel-content">
+          <h3 class="contact-panel-title">חוויית האוכל אצלנו</h3>
+          <div class="contact-panel-separator"></div>
+          <p class="contact-panel-text">אנחנו מסעדה חלבית המגישה פיצות טריות מהתנור, מנות גבינה עשירות, ומגוון רחב של תפריט חלבי. האווירה חמה ומזמינה — מושלמת לארוחה משפחתית, דייט, או יציאה עם חברים. מסעדה כשרה המתאימה לכולם.</p>
+          <ul class="contact-panel-features">
+            <li><i class="fa-solid fa-check"></i><span>מסעדה כשרה חלבית</span></li>
+            <li><i class="fa-solid fa-check"></i><span>מתאים לכל הגילאים</span></li>
+            <li><i class="fa-solid fa-check"></i><span>אפשרות לישיבה בחוץ</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Panel 3: Visit Notes -->
+      <article class="contact-details-panel">
+        <div class="contact-panel-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true">
+            <rect x="8" y="10" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2.5" fill="none"></rect>
+            <path d="M16 8v6M32 8v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+            <line x1="8" y1="22" x2="40" y2="22" stroke="currentColor" stroke-width="2.5"></line>
+            <circle cx="18" cy="31" r="2" fill="currentColor"></circle>
+            <circle cx="24" cy="31" r="2" fill="currentColor"></circle>
+            <circle cx="30" cy="31" r="2" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <div class="contact-panel-content">
+          <h3 class="contact-panel-title">מה כדאי לדעת לפני הביקור</h3>
+          <div class="contact-panel-separator"></div>
+          <p class="contact-panel-text">אנחנו שמחים לארח אתכם בכל יום. לקבוצות גדולות ואירועים מיוחדים, מומלץ ליצור קשר מראש כדי שנוכל להכין את השולחן המושלם בשבילכם. אנחנו תמיד שמחים לשמוע מכם ולהתאים את החוויה לצרכים שלכם.</p>
+          <ul class="contact-panel-features">
+            <li><i class="fa-solid fa-check"></i><span>פתוח כל ימות השבוע</span></li>
+            <li><i class="fa-solid fa-check"></i><span>הזמנות לאירועים</span></li>
+            <li><i class="fa-solid fa-check"></i><span>שירות משלוחים</span></li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Bottom diagonal divider transitioning to contact form -->
+  <div class="contact-details-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,55 L1440,20 L1440,80 Z" fill="#FBF5EE"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section class="contact-contact-form-section" data-layout-spec="צור קשר-contact-form" dir="rtl">
+  <!-- Decorative flour-dust texture overlay -->
+  <div class="ccf-texture" aria-hidden="true"></div>
+
+  <div class="ccf-container">
+    <!-- Section header -->
+    <div class="ccf-header">
+      <span class="ccf-eyebrow">צרו קשר</span>
+      <h2 class="ccf-title">שמחים לשמוע מכם</h2>
+      <p class="ccf-subtitle">יש לכם שאלה, הצעה, או סתם רוצים לשמוע עוד על המנות שלנו? מלאו את הטופס ונחזור אליכם בהקדם.</p>
+    </div>
+
+    <!-- Contact form card -->
+    <div class="ccf-card">
+      <!-- Decorative mosaic accent -->
+      <svg class="ccf-mosaic-deco" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="10,10 40,5 45,35 15,40" fill="#C9423A" opacity="0.18"></polygon>
+        <polygon points="50,0 80,8 75,38 45,30" fill="#4F7A6A" opacity="0.14"></polygon>
+        <polygon points="5,50 30,45 35,75 8,78" fill="#F6C667" opacity="0.20"></polygon>
+        <polygon points="60,20 90,15 95,50 62,52" fill="#C9423A" opacity="0.10"></polygon>
+        <polygon points="20,80 55,75 58,105 22,108" fill="#4F7A6A" opacity="0.12"></polygon>
+      </svg>
+
+      <form class="contact-form ccf-form" novalidate="">
+        <div class="ccf-field-row">
+          <div class="ccf-field">
+            <label class="ccf-label" for="ccf-name">שם מלא</label>
+            <input class="ccf-input" type="text" id="ccf-name" name="name" placeholder="הכניסו את שמכם" required="">
+          </div>
+          <div class="ccf-field">
+            <label class="ccf-label" for="ccf-email">דואר אלקטרוני</label>
+            <input class="ccf-input" type="email" id="ccf-email" name="email" placeholder="your@email.com" required="">
+          </div>
+        </div>
+
+        <div class="ccf-field">
+          <label class="ccf-label" for="ccf-phone">טלפון</label>
+          <input class="ccf-input" type="tel" id="ccf-phone" name="phone" placeholder="05X-XXX-XXXX">
+        </div>
+
+        <div class="ccf-field">
+          <label class="ccf-label" for="ccf-message">הודעה</label>
+          <textarea class="ccf-input ccf-textarea" id="ccf-message" name="message" placeholder="ספרו לנו במה נוכל לעזור..." rows="5" required=""></textarea>
+        </div>
+
+        <div class="privacy-consent">
+          <label class="privacy-consent-label">
+            <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required="">
+            <span>קראתי ואני מסכים/ה ל<a href="/terms" target="_blank">תנאי השימוש</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="מדיניות החזרות">
+              מדיניות החזרות
+            </a> ול<a href="/privacy" target="_blank">מדיניות הפרטיות</a></span>
+          </label>
+        </div>
+
+        <div class="ccf-submit-row">
+          <button type="submit" class="ccf-btn-submit">שלחו הודעה <i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contact info strip -->
+    <div class="ccf-info-strip">
+      <div class="ccf-info-item">
+        <i class="fa fa-phone ccf-info-icon" aria-hidden="true"></i>
+        
+      </div>
+      <div class="ccf-info-item">
+        <i class="fa fa-envelope ccf-info-icon" aria-hidden="true"></i>
+        
+      </div>
+      <div class="ccf-info-item">
+        <i class="fa fa-map-marker ccf-info-icon" aria-hidden="true"></i>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom flour-dust divider transitioning into FAQ -->
+  <div class="ccf-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,48 Q60,38 120,50 T240,44 Q300,50 360,40 T480,46 Q540,38 600,50 T720,42 Q780,50 840,40 T960,46 Q1020,38 1080,48 T1200,42 Q1300,50 1360,44 L1440,48 L1440,80 Z" fill="#2D5A3D"></path>
+      <path d="M0,80 L0,60 Q80,52 160,62 T320,56 Q400,64 480,58 T640,62 Q720,56 800,64 T960,58 Q1040,64 1120,58 T1280,62 L1440,58 L1440,80 Z" fill="#2D5A3D" opacity="0.6"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-faq-section" data-layout-spec="צור קשר-faq" dir="rtl">
+  <!-- Subtle tile pattern background overlay -->
+  <div class="contact-faq-section__bg-pattern" aria-hidden="true"></div>
+
+  <div class="contact-faq-section__container">
+    <!-- Section Header -->
+    <div class="contact-faq-section__header">
+      <span class="contact-faq-section__label">שאלות ותשובות</span>
+      <h2 class="contact-faq-section__title">כל מה שרציתם לדעת</h2>
+      <p class="contact-faq-section__subtitle">מידע שימושי לפני הביקור, ההזמנה, והסעודה אצלנו</p>
+    </div>
+
+    <!-- FAQ Two-Column Grid -->
+    <div class="contact-faq-section__grid">
+
+      <!-- Item 1 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="13" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M14 8v7l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">מהם שעות הפעילות של המסעדה?</h3>
+          <p class="contact-faq-section__item-a">אנחנו פתוחים בימים ראשון עד חמישי בין השעות 12:00–22:30, בימי שישי 11:00–15:00, ובמוצאי שבת משעה 20:00 ועד 23:00. מומלץ לבדוק עדכונים בחגים ומועדים מיוחדים.</p>
+        </div>
+      </article>
+
+      <!-- Item 2 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 10h18M5 14h18M5 18h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <rect x="3" y="5" width="22" height="18" rx="3" stroke="currentColor" stroke-width="1.5"></rect>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">האם המסעדה כשרה?</h3>
+          <p class="contact-faq-section__item-a">כן! פיצהצה היא מסעדה חלבית בהשגחה כשרה מלאה. כל המנות שלנו הן חלביות בלבד – ללא בשר ועוף – כך שתוכלו ליהנות מהארוחה בשקט מלא.</p>
+        </div>
+      </article>
+
+      <!-- Item 3 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3C8.477 3 4 7.477 4 13c0 2.136.67 4.116 1.81 5.74L4 25l6.26-1.81A9.954 9.954 0 0014 24c5.523 0 10-4.477 10-10S19.523 3 14 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">איך אפשר ליצור קשר להזמנת מקום?</h3>
+          <p class="contact-faq-section__item-a">ניתן לפנות אלינו בטלפון, בוואטסאפ, או דרך טופס יצירת הקשר באתר. אנחנו ממליצים להזמין מקום מראש, במיוחד בסופי שבוע ובחגים, כדי להבטיח חוויה מושלמת.</p>
+        </div>
+      </article>
+
+      <!-- Item 4 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="10" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M5 24c0-4.418 4.03-8 9-8s9 3.582 9 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">האם יש מקום לקבוצות וארועים פרטיים?</h3>
+          <p class="contact-faq-section__item-a">בהחלט! אנחנו מארחים קבוצות, ימי הולדת, מפגשים עסקיים ואירועים משפחתיים. ניתן לתאם תפריט מותאם ואזור ישיבה מוגדר. צרו קשר מראש לתיאום הפרטים.</p>
+        </div>
+      </article>
+
+      <!-- Item 5 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="7" width="22" height="16" rx="3" stroke="currentColor" stroke-width="1.5"></rect>
+            <path d="M8 7V5a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.5"></path>
+            <path d="M14 13v4M12 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">האם יש אפשרות למשלוחים?</h3>
+          <p class="contact-faq-section__item-a">כן, אנחנו מציעים משלוחים לאזורים הסמוכים. ניתן להזמין ישירות דרך הטלפון או דרך אפליקציות המשלוחים המובילות. הפיצות שלנו מגיעות אליכם חמות וטריות!</p>
+        </div>
+      </article>
+
+      <!-- Item 6 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 4C9.582 4 6 7.582 6 12c0 6 8 14 8 14s8-8 8-14c0-4.418-3.582-8-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+            <circle cx="14" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"></circle>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">היכן אתם ממוקמים ואיך מגיעים?</h3>
+          <p class="contact-faq-section__item-a">המסעדה ממוקמת במרכז העיר עם גישה נוחה בתחבורה ציבורית ובחניה פרטית. ניתן לבדוק את המיקום המדויק במפה שלנו בדף זה ולקבל הנחיות ניווט ישירות לסמארטפון.</p>
+        </div>
+      </article>
+
+      <!-- Item 7 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 8h20M4 14h14M4 20h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">האם יש אפשרויות לצמחונים וטבעונים?</h3>
+          <p class="contact-faq-section__item-a">התפריט שלנו חלבי לחלוטין ועשיר בבחירות צמחוניות. אנחנו מציעים גם מנות ללא גלוטן ומתאימים לאנשים עם העדפות תזונתיות שונות – פשוט ציינו בעת ההזמנה.</p>
+        </div>
+      </article>
+
+      <!-- Item 8 -->
+      <article class="contact-faq-section__item">
+        <div class="contact-faq-section__item-icon" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 4v6l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M14 10a8 8 0 100 16 8 8 0 000-16z" stroke="currentColor" stroke-width="1.5"></path>
+            <path d="M14 14v4h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="contact-faq-section__item-content">
+          <h3 class="contact-faq-section__item-q">מה זמן ההמתנה הממוצע?</h3>
+          <p class="contact-faq-section__item-a">בשעות השיא זמן ההמתנה עשוי להגיע לכ-15 דקות. הזמנה מראש מקצרת משמעותית את ההמתנה. הפיצות שלנו נאפות בתנור אבן ומוכנות תוך כ-12 דקות מרגע ההזמנה.</p>
+        </div>
+      </article>
+
+    </div>
+    <!-- End FAQ Grid -->
+  </div>
+
+  <!-- Bottom divider: warm gradient dissolve -->
+  <div class="contact-faq-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,70 L0,28 Q80,18 160,30 T320,22 Q400,28 480,18 T640,25 Q720,30 800,20 T960,28 Q1040,22 1120,30 T1200,24 L1200,70 Z" fill="#FBF5EE"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section class="contact-location-section" data-layout-spec="צור קשר-location" dir="rtl">
+  <!-- Decorative mosaic tile motif -->
+  <svg class="contact-location-section__deco-mosaic" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="20,10 60,10 60,50 20,50" fill="#C9423A" opacity="0.13"></polygon>
+    <polygon points="70,0 110,0 110,40 70,40" fill="#4F7A6A" opacity="0.10"></polygon>
+    <polygon points="0,60 35,60 35,95 0,95" fill="#F6C667" opacity="0.15"></polygon>
+    <polygon points="45,70 80,70 80,105 45,105" fill="#C9423A" opacity="0.08"></polygon>
+    <polygon points="90,50 130,50 130,90 90,90" fill="#4F7A6A" opacity="0.09"></polygon>
+    <polygon points="10,110 50,110 50,150 10,150" fill="#F6C667" opacity="0.10"></polygon>
+    <polygon points="60,120 100,120 100,160 60,160" fill="#C9423A" opacity="0.07"></polygon>
+  </svg>
+
+  <div class="contact-location-section__container">
+
+    <!-- Text Side (RIGHT in RTL) -->
+    <div class="contact-location-section__content">
+      <span class="contact-location-section__label">מצאו אותנו</span>
+      <h2 class="contact-location-section__heading">בואו לבקר אותנו</h2>
+      <div class="contact-location-section__rule" aria-hidden="true"></div>
+      <p class="contact-location-section__body">אנחנו ממוקמים במרכז העיר וממתינים לכם עם ניחוח פיצה טרייה ומאכלי חלב מפנקים. בין אם אתם מחפשים ארוחת ערב משפחתית, פגישה עם חברים, או סתם פרוסת פיצה טובה — פיצהצה תמיד פתוחה בשבילכם. הגיעו, שבו, ותנו לנו לפנק אתכם.</p>
+
+      <ul class="contact-location-section__details">
+        <li>
+          <span class="contact-location-section__detail-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </span>
+          
+        </li>
+        
+        
+        <li>
+          <span class="contact-location-section__detail-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <span>ראשון–חמישי 12:00–23:00 &nbsp;|&nbsp; שישי 12:00–15:00 &nbsp;|&nbsp; שבת 20:00–23:30</span>
+        </li>
+      </ul>
+
+      <div class="contact-location-section__cta-row">
+        
+        <a href="/contact" class="contact-location-section__btn-secondary">צרו קשר</a>
+      </div>
+    </div>
+
+    <!-- Map / Image Side (LEFT in RTL) -->
+    <div class="contact-location-section__map-panel">
+      <div class="contact-location-section__map-frame">
+        <img loading="lazy" decoding="async" data-placeholder="contact-location-image-1" data-context="Warm, inviting exterior of a cozy Italian-style dairy pizzeria restaurant in Israel. The facade features terracotta tones, a glowing sign reading פיצהצה, outdoor seating with warm lighting, and a welcoming entrance. Evening atmosphere with warm golden light spilling from inside. Street-level view showing the neighborhood context." width="600" height="480" src="/assets/site-contact-location-image-1.webp" alt="חזית מסעדת פיצהצה — מסעדת פיצריה חלבית">
+        <!-- Map pin overlay -->
+        <div class="contact-location-section__map-pin" aria-hidden="true">
+          <svg data-element-type="icon" data-icon-type="svg" width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 0C7.163 0 0 7.163 0 16c0 10.5 16 24 16 24S32 26.5 32 16C32 7.163 24.837 0 16 0z" fill="#C9423A"></path>
+            <circle cx="16" cy="16" r="7" fill="#FFF8F2"></circle>
+            <circle cx="16" cy="16" r="4" fill="#C9423A"></circle>
+          </svg>
+          <span>פיצהצה</span>
+        </div>
+        <!-- Decorative corner accent -->
+        <div class="contact-location-section__map-badge" aria-hidden="true">
+          <span>📍</span>
+          <span>מסעדה קרובה אליך</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl" aria-label="כותרת תחתונה של האתר"> <div class="footer-container"> <div class="footer-top"> <div class="footer-col footer-brand"> <img src="/assets/restaurant-logo.webp" alt="פיצהצה" class="logo"> <p class="footer-tagline">פיצה אמיתית, טעם אמיתי.<br>מהלב אל הצלחת — כל יום מחדש.</p> <div class="footer-social">    </div> </div> <div class="footer-col footer-links"> <h3 class="footer-heading"><span class="heading-accent"></span>ניווט מהיר</h3> <ul class="footer-nav"> <li><a href="/">בית</a></li> <li><a href="/about">אודות</a></li> <li><a href="/gallery">גלריה</a></li> <li><a href="/contact">צור קשר</a></li> </ul> </div> <div class="footer-col footer-hours"> <h3 class="footer-heading"><span class="heading-accent"></span>שעות פעילות</h3> <ul class="hours-list"> <li><a href="/"><span class="day">ראשון – חמישי</span><span class="time">12:00 – 23:00</span></a></li> <li><a href="/"><span class="day">שישי</span><span class="time">11:00 – 15:00</span></a></li> <li><a href="/"><span class="day">שבת</span><span class="time">20:00 – 23:30</span></a></li> </ul> </div> <div class="footer-col footer-contact-col"> <h3 class="footer-heading"><span class="heading-accent"></span>יצירת קשר</h3> <ul class="footer-contact"> <li> <span class="contact-icon"><i class="fas fa-envelope"></i></span> <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span> </li> <li> <span class="contact-icon"><i class="fas fa-phone"></i></span> <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span> </li> <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span> <span class="contact-text">[business_address]</span></a></li> </ul> </div> </div> <div class="footer-divider"></div> <div class="footer-bottom"> <p class="footer-copyright">© 2026 פיצהצה. כל הזכויות שמורות.</p> <div class="footer-legal"> <a href="/privacy">מדיניות פרטיות</a> <span class="legal-sep">·</span> <a href="/terms">תנאי שימוש</a> <span class="legal-sep">·</span> <a href="/accessibility">נגישות</a> <span class="legal-sep">·</span> <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a> </div> </div> </div> </footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>
